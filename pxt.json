@@ -7,12 +7,12 @@
     },
     "files": [
         "README.md",
-        "main.blocks",
-        "main.ts"
+        "main.ts",
+        "lantern.ts"
     ],
     "testFiles": [
         "test.ts"
     ],
     "public": true,
-    "preferredEditor": "blocksprj"
+    "preferredEditor": "tsprj"
 }
