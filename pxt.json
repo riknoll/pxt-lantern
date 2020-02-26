@@ -1,6 +1,6 @@
 {
     "name": "pxt-lantern",
-    "version": "0.0.1",
+    "version": "0.0.0",
     "description": "",
     "dependencies": {
         "device": "*"
@@ -14,8 +14,5 @@
         "test.ts"
     ],
     "public": true,
-    "supportedTargets": [
-        "arcade"
-    ],
     "preferredEditor": "tsprj"
 }
