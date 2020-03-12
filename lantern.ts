@@ -93,6 +93,7 @@ namespace lantern {
         protected anchor: LightAnchor;
         protected init: boolean;
         protected running: boolean;
+        protected breathing: boolean;
 
         public static getInstance() {
             if (!LanternEffect.instance) LanternEffect.instance = new LanternEffect();
@@ -109,13 +110,11 @@ namespace lantern {
                 bandPalettes.push(buffer);
             }
 
-            this.sources = [];
-            this.sources.push(new LightSource(4, 12, 2))
-            this.sources.push(new LightSource(4, 13, 1))
-            this.sources.push(new LightSource(4, 13, 2))
+            this.setBandWidth(13);
 
             this.setAnchor({ x: screen.width >> 1, y: screen.height >> 1 });
             this.running = false;
+            this.breathing = true;
         }
 
         startScreenEffect() {
@@ -134,6 +133,10 @@ namespace lantern {
 
             game.onUpdateInterval(1000, () => {
                 if (!this.running) return;
+                if (!this.breathing) {
+                    index = 1;
+                    return;
+                }
                 if (up) index++;
                 else index--;
 
@@ -154,9 +157,23 @@ namespace lantern {
 
         setAnchor(anchor: LightAnchor) {
             this.anchor = anchor;
-            this.sources.forEach(function (value: LightSource, index: number) {
+            this.sources.forEach((value: LightSource, index: number) => {
                 value.anchor = this.anchor;
             });
+        }
+
+        setBandWidth(width: number) {
+            this.sources = [
+                new LightSource(4, width - 1, 2),
+                new LightSource(4, width, 1),
+                new LightSource(4, width + 1, 2)
+            ];
+
+            this.setAnchor(this.anchor)
+        }
+
+        setBreathingEnabled(enabled: boolean) {
+            this.breathing = enabled;
         }
     }
 
@@ -175,5 +192,15 @@ namespace lantern {
     //% block
     export function stopLanternEffect() {
         LanternEffect.getInstance().stopScreenEffect();
+    }
+
+    //% block
+    export function setLightBandWidth(width: number) {
+        LanternEffect.getInstance().setBandWidth(width);
+    }
+
+    //% block
+    export function setBreathingEnabled(enabled: boolean) {
+        LanternEffect.getInstance().setBreathingEnabled(enabled);
     }
 }
