@@ -1,6 +1,7 @@
 const s = sprites.create(sprites.castle.princess2Front, SpriteKind.Player)
 controller.moveSprite(s)
 s.z = 10;
+scene.cameraFollowSprite(s)
 
 const testImages = [
     sprites.castle.skellyAttackFront1,

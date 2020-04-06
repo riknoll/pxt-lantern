@@ -42,8 +42,8 @@ namespace lantern {
         apply() {
             const camera = game.currentScene().camera;
             const halfh = this.width;
-            const cx = this.anchor.x;
-            const cy = this.anchor.y;
+            const cx = this.anchor.x - camera.drawOffsetX;
+            const cy = this.anchor.y - camera.drawOffsetY;
 
             let prev: number;
             let offset: number;
@@ -124,7 +124,8 @@ namespace lantern {
             this.init = true;
 
             let index = 0;
-            game.eventContext().registerFrameHandler(91, () => {
+
+            scene.createRenderable(91, () => {
                 if (!this.running) return;
                 this.sources[index].apply();
             })
