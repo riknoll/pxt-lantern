@@ -52,8 +52,12 @@ namespace lantern {
             // First, black out the completely dark areas of the screen
             screen.fillRect(0, 0, screen.width, cy - halfh + 1, 15)
             screen.fillRect(0, cy - halfh + 1, cx - halfh, halfh << 1, 15)
-            screen.fillRect(cx + halfh, cy - halfh + 1, screen.width - cx - halfh, halfh << 1, 15)
-            screen.fillRect(0, cy + halfh, screen.width, screen.height - (cy + halfh), 15)
+            
+            // 1 pixel missed 
+            // right side rect, 120 col missed
+            screen.fillRect(cx + halfh, cy - halfh + 1, screen.width - cx - halfh + 1, halfh << 1, 15)
+            // bottom rect,  120 row missed
+            screen.fillRect(0, cy + halfh, screen.width, screen.height - (cy + halfh) + 1, 15)
 
             // Go over each row and darken the colors
             for (let y = 0; y < halfh; y++) {
