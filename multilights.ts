@@ -8,14 +8,16 @@ namespace multilights {
      // The top row is just the palette, each row gets darker
     const palette_ramps = image.ofBuffer(hex`e4100400ffff0000d1cb0000a2ff0000b3fc0000e4fc000045ce000086fc000067c80000c8ff000069c80000bafc0000cbff0000fcff0000bdfc0000ceff0000ffff0000`);
 
-    let bandPalettes :Buffer[] = []
+    let lightLevelBuffer :Buffer[]
+
 
     function changeRowLightLevel(lightMap:Image, x:number, y:number, width:number, lightLevel:number) {
-
-
-
+        for(let x0 = x ; x0 < width + x; x0++) {
+            let currentLightLevel = lightMap.getPixel(x0, y)
+            lightMap.setPixel(x0, y, Math.min(lightLevel, currentLightLevel))
+        }
     }
-    //
+
     export class MultiLightSource {
         private sprite:Sprite
         offsetTable: Buffer;
@@ -75,10 +77,10 @@ namespace multilights {
                     }
 
                     // We reflect the circle-quadrant horizontally and vertically
-                    changeRowLightLevel(lightMap, cx + offset, cy + y + 1, prev - offset, 4 - band)
-                    changeRowLightLevel(lightMap, cx - prev, cy + y + 1, prev - offset, 4 - band)
-                    changeRowLightLevel(lightMap, cx + offset, cy - y, prev - offset, 4 - band)
-                    changeRowLightLevel(lightMap, cx - prev, cy - y, prev - offset, 4 - band)
+                    changeRowLightLevel(lightMap, cx + offset, cy + y + 1, prev - offset,band)
+                    changeRowLightLevel(lightMap, cx - prev, cy + y + 1, prev - offset,band) 
+                    changeRowLightLevel(lightMap, cx + offset, cy - y, prev - offset,band)
+                    changeRowLightLevel(lightMap, cx - prev, cy - y, prev - offset,band)
 
                     prev = offset;
                     band--;
@@ -90,7 +92,7 @@ namespace multilights {
     export class MultiLightScreenEffect implements effects.BackgroundEffect {
 
         private lightSourceMap : {[id:string]:MultiLightSource;} = {}
-
+        private bandPalettes :Buffer[] = []
         private _init:boolean = false
         private running = false;
         private static instance :MultiLightScreenEffect
@@ -101,15 +103,16 @@ namespace multilights {
             }
             return MultiLightScreenEffect.instance
         }
+
         constructor() {
             this._init = false;
-            bandPalettes = [];
+            this.bandPalettes = [];
             for (let band = 0; band < 6; band++) {
                 const buffer = pins.createBuffer(16);
                 for (let i = 0; i < 16; i++) {
                     buffer[i] = palette_ramps.getPixel(i, band + 1);
                 }
-                bandPalettes.push(buffer);
+                this.bandPalettes.push(buffer);
             }
         }
 
@@ -117,11 +120,33 @@ namespace multilights {
             this.running = false;
         }
 
+        applyLightMapToScreen(lightMap:Image) {
+            for (let y = 0; y< screen.height; y++) {            
+                let begin = 0, currentLightLevel = lightMap.getPixel(0, y)
+                for (let x = 1; x < screen.width; x++) {
+                    if (currentLightLevel != lightMap.getPixel(x, y)) {
+                        if (currentLightLevel != 6) {
+                            screen.mapRect(begin, y, x - begin, 1, this.bandPalettes[currentLightLevel])
+                        }
+                        currentLightLevel = lightMap.getPixel(x, y)
+                        begin = x
+                    }
+                }
+                if (currentLightLevel != 6) {
+                    screen.mapRect(begin, y, screen.width - begin, 1, this.bandPalettes[currentLightLevel])
+                }
+                
+            }
+
+        }
+
 
         startScreenEffect() {
             if(this._init) {
                 return
             }
+
+            this.running = true
 
 
             scene.createRenderable(91, () => {
@@ -132,15 +157,15 @@ namespace multilights {
 
                 // 0. prepare a empty light map with radius 0
                 let lightMap = image.create(screen.width, screen.height)
-                lightMap.fill(0)
+                lightMap.fill(6)
                 // 1. prepare light map for each light source
                 for (const key of Object.keys(this.lightSourceMap)) {
                     let lightsource = this.lightSourceMap[key]
                     lightsource.apply(lightMap)
-                }
-
-                
+                }                
                 // 2. apply light map to screen
+                screen.drawTransparentImage(lightMap, 0, 0)
+                // this.applyLightMapToScreen(lightMap)
             })
 
             this._init = true
@@ -149,7 +174,7 @@ namespace multilights {
         addLightSource(sprite:Sprite, bandWidth:number) {
             let newLightSource = this.lightSourceMap[sprite.id]
             if (!newLightSource) {
-                newLightSource = new MultiLightSource(sprite, bandWidth, 4, 1)    
+                newLightSource = new MultiLightSource(sprite, bandWidth, 6, 20)    
                 this.lightSourceMap[sprite.id] = newLightSource
             }
 
@@ -182,4 +207,7 @@ namespace multilights {
     export function addLightSource(sprite:Sprite,bandWidth:number) {
         MultiLightScreenEffect.getInstance().addLightSource(sprite, bandWidth)
     }
+
+    //scene.backgroundImage().drawTransparentImage(palette_ramps,80, 60)
+    
 }

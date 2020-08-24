@@ -23,10 +23,19 @@ for (let x = 0; x < 5; x++) {
         const temp = sprites.create(testImages[Math.randomRange(0, testImages.length - 1)], SpriteKind.Enemy);
         temp.left = 10 + ((screen.width - 20) / 5) * x
         temp.top = 10 + ((screen.height - 20) / 5) * y
+
+        if (y == 4) {
+            multilights.addLightSource(temp, 4)
+            // temp.vx = randint(-20,20)
+            // temp.vy = randint(-20,20)
+        }
     }
 }
 
 
-lantern.startLanternEffect(s)
+
+// lantern.startLanternEffect(s)
 // lantern.setBreathingEnabled(false);
-lantern.setLightBandWidth(20)
+// lantern.setLightBandWidth(20)
+multilights.addLightSource(s, 10)
+multilights.toggleLighting(true)
