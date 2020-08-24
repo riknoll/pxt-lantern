@@ -16,7 +16,6 @@ const testImages = [
     sprites.dungeon.purpleOuterNorthWest
 ]
 
-
 scene.setBackgroundColor(Math.randomRange(2, 14))
 
 for (let x = 0; x < 5; x++) {

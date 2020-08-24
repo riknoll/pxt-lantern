@@ -8,12 +8,19 @@
     "files": [
         "README.md",
         "main.ts",
-        "lantern.ts"
+        "lantern.ts",
+        "tilemap.g.jres",
+        "tilemap.g.ts",
+        "multilights.ts"
     ],
     "testFiles": [
         "test.ts"
     ],
     "public": true,
+    "targetVersions": {
+        "target": "1.0.16",
+        "targetId": "arcade"
+    },
     "supportedTargets": [
         "arcade"
     ],
