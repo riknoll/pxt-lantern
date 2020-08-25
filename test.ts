@@ -26,16 +26,10 @@ for (let x = 0; x < 5; x++) {
 
         if (y == 4) {
             multilights.addLightSource(temp, 4)
-            // temp.vx = randint(-20,20)
-            // temp.vy = randint(-20,20)
+            temp.vx = randint(-20,20)
+            temp.vy = randint(-20,20)
         }
     }
 }
-
-
-
-// lantern.startLanternEffect(s)
-// lantern.setBreathingEnabled(false);
-// lantern.setLightBandWidth(20)
-multilights.addLightSource(s, 10)
+multilights.addLightSource(s, 20)
 multilights.toggleLighting(true)
