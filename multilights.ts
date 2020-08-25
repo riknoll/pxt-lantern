@@ -1,4 +1,5 @@
 // Add your code here
+//% icon="\uf185" color="#8f1fff"
 namespace multilights {
      // The top row is just the palette, each row gets darker
     const palette_ramps = image.ofBuffer(hex`e4100400ffff0000d1cb0000a2ff0000b3fc0000e4fc000045ce000086fc000067c80000c8ff000069c80000bafc0000cbff0000fcff0000bdfc0000ceff0000ffff0000`);
@@ -209,8 +210,8 @@ namespace multilights {
     }
 
     //%block
-    //%blockid=multiplightBandWidthOfSprite block="set light band width to %bandWidth of %sprite=variables_get(mySprite) "
-    //% bandWidth.dflt=4
+    //%blockid=multiplightBandWidthOfSprite block="set %sprite=variables_get(mySprite) light band width to %bandWidth"
+    //%bandWidth.defl=4
     export function bandWidthOf(sprite:Sprite, bandWidth:number) {
         MultiLightScreenEffect.getInstance().bandWidthOfSprite(sprite, bandWidth)
     }
@@ -223,8 +224,9 @@ namespace multilights {
 
 
     //%block
-    //%blockid=multiplightAddLishtSource block="add light source of %sprite=variables_get(mySprite) "
-    export function addLightSource(sprite:Sprite,bandWidth:number) {
+    //%blockid=multiplightAddLishtSource block="add light source of %sprite=variables_get(mySprite) || with band width of %bandWidth "
+    //%bandWidth.defl=4
+    export function addLightSource(sprite:Sprite,bandWidth:number=4) {
         MultiLightScreenEffect.getInstance().addLightSource(sprite, bandWidth)
     }
     
