@@ -33,3 +33,88 @@ for (let x = 0; x < 5; x++) {
 }
 multilights.addLightSource(s, 20)
 multilights.toggleLighting(true)
+
+let lightEffectOn = true
+controller.B.onEvent(ControllerButtonEvent.Pressed, function() {
+    lightEffectOn = !lightEffectOn
+    multilights.toggleLighting(lightEffectOn)
+})
+controller.A.onEvent(ControllerButtonEvent.Pressed, function() {
+    let projectileSprite = sprites.createProjectileFromSprite(img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . 5 5 . . . . . . . .
+        . . . . . 5 2 2 5 . . . . . . .
+        . . . . 5 2 1 1 2 5 . . . . . .
+        . . . . 5 2 1 1 2 5 . . . . . .
+        . . . . . 5 2 2 5 . . . . . . .
+        . . . . . . 5 5 . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `, s, 50, 0)
+    multilights.addLightSource(projectileSprite, 4)
+    projectileSprite = sprites.createProjectileFromSprite(img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . 5 5 . . . . . . . .
+        . . . . . 5 2 2 5 . . . . . . .
+        . . . . 5 2 1 1 2 5 . . . . . .
+        . . . . 5 2 1 1 2 5 . . . . . .
+        . . . . . 5 2 2 5 . . . . . . .
+        . . . . . . 5 5 . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `, s, -50, 0)
+    multilights.addLightSource(projectileSprite, 4)
+    projectileSprite = sprites.createProjectileFromSprite(img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . 5 5 . . . . . . . .
+        . . . . . 5 2 2 5 . . . . . . .
+        . . . . 5 2 1 1 2 5 . . . . . .
+        . . . . 5 2 1 1 2 5 . . . . . .
+        . . . . . 5 2 2 5 . . . . . . .
+        . . . . . . 5 5 . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `, s, 0, 50)
+    multilights.addLightSource(projectileSprite, 4)
+    projectileSprite = sprites.createProjectileFromSprite(img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . 5 5 . . . . . . . .
+        . . . . . 5 2 2 5 . . . . . . .
+        . . . . 5 2 1 1 2 5 . . . . . .
+        . . . . 5 2 1 1 2 5 . . . . . .
+        . . . . . 5 2 2 5 . . . . . . .
+        . . . . . . 5 5 . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `, s, 0, -50)
+    multilights.addLightSource(projectileSprite, 4)
+
+})

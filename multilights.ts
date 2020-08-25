@@ -159,6 +159,7 @@ namespace multilights {
         }
 
         startScreenEffect() {
+            this.running = true            
             if(this._init) {
                 return
             }
@@ -182,7 +183,6 @@ namespace multilights {
             })
 
             this._init = true
-            this.running = true
         }
 
         addLightSource(sprite:Sprite, bandWidth:number) {
@@ -198,6 +198,7 @@ namespace multilights {
         }
     } 
 
+    //%block
     export function toggleLighting(on:boolean) {
         if (on) {
             MultiLightScreenEffect.getInstance().startScreenEffect()
@@ -207,15 +208,22 @@ namespace multilights {
 
     }
 
-
+    //%block
+    //%blockid=multiplightBandWidthOfSprite block="set light band width to %bandWidth of %sprite=variables_get(mySprite) "
+    //% bandWidth.dflt=4
     export function bandWidthOf(sprite:Sprite, bandWidth:number) {
         MultiLightScreenEffect.getInstance().bandWidthOfSprite(sprite, bandWidth)
     }
 
-    export function removeLightSource(sprite:Sprite) {
+    //%block
+    //%blockid=multiplightRemoveLishtSource block="remove light source of %sprite=variables_get(mySprite) "
+       export function removeLightSource(sprite:Sprite) {
         MultiLightScreenEffect.getInstance().removeLightSource(sprite)
     }
 
+
+    //%block
+    //%blockid=multiplightAddLishtSource block="add light source of %sprite=variables_get(mySprite) "
     export function addLightSource(sprite:Sprite,bandWidth:number) {
         MultiLightScreenEffect.getInstance().addLightSource(sprite, bandWidth)
     }
