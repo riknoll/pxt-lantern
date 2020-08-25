@@ -11,12 +11,18 @@ namespace multilights {
         private width:number
         private height:number
 
-        constructor(sprite:Sprite, bandWidth:number, public rings: number, public centerRadius: number ){
-            this.sprite = sprite
+        setBandWidth(bandWidth:number) {
             this.bandWidth = bandWidth
+            this.prepareOffset()
+        }
 
-            const halfh = centerRadius + rings * bandWidth;
-            this.offsetTable = pins.createBuffer((rings + 1) * halfh);
+        getBandWidth():number {
+            return this.bandWidth 
+        }
+
+        prepareOffset() {
+            const halfh = this.centerRadius + this.rings * this.bandWidth;
+            this.offsetTable = pins.createBuffer((this.rings + 1) * halfh);
 
             // Approach is roughly based on https://hackernoon.com/pico-8-lighting-part-1-thin-dark-line-8ea15d21fed7
             let x: number;
@@ -26,14 +32,21 @@ namespace multilights {
                 y2 = Math.pow(y, 2);
                 // Store the offsets where the bands switch light levels for each row. We only need to
                 // do one quadrant which we can mirror in x/y
-                for (band = 0; band < rings; band++) {
-                    x = Math.sqrt(Math.pow(centerRadius + bandWidth * (band + 1), 2) - y2) | 0;
-                    this.offsetTable[y * rings + band] = x;
+                for (band = 0; band < this.rings; band++) {
+                    x = Math.sqrt(Math.pow(this.centerRadius + this.bandWidth * (band + 1), 2) - y2) | 0;
+                    this.offsetTable[y * this.rings + band] = x;
                 }
             }
 
             this.width = halfh;
             this.height = halfh;
+        }
+
+        constructor(sprite:Sprite, bandWidth:number, public rings: number, public centerRadius: number ){
+            this.sprite = sprite
+            this.bandWidth = bandWidth
+
+            this.prepareOffset()
         }
 
         changeRowLightLevel(lightMap:Image, x:number, y:number, width:number, lightLevel:number) {
@@ -136,6 +149,14 @@ namespace multilights {
             }
         }
 
+        bandWidthOfSprite(sprite:Sprite, bandWidth:number) {
+            let lightSource = this.lightSourceMap[sprite.id]
+            lightSource.setBandWidth(bandWidth) 
+        }
+
+        removeLightSource(sprite:Sprite) {
+            delete this.lightSourceMap[sprite.id]
+        }
 
         startScreenEffect() {
             if(this._init) {
@@ -177,8 +198,6 @@ namespace multilights {
         }
     } 
 
-    
-
     export function toggleLighting(on:boolean) {
         if (on) {
             MultiLightScreenEffect.getInstance().startScreenEffect()
@@ -190,11 +209,11 @@ namespace multilights {
 
 
     export function bandWidthOf(sprite:Sprite, bandWidth:number) {
-
+        MultiLightScreenEffect.getInstance().bandWidthOfSprite(sprite, bandWidth)
     }
 
     export function removeLightSource(sprite:Sprite) {
-
+        MultiLightScreenEffect.getInstance().removeLightSource(sprite)
     }
 
     export function addLightSource(sprite:Sprite,bandWidth:number) {
