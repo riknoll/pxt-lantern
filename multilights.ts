@@ -4,106 +4,9 @@ namespace multilights {
      // The top row is just the palette, each row gets darker
     const palette_ramps = image.ofBuffer(hex`e4100400ffff0000d1cb0000a2ff0000b3fc0000e4fc000045ce000086fc000067c80000c8ff000069c80000bafc0000cbff0000fcff0000bdfc0000ceff0000ffff0000`);
 
-    export class MultiLightSource {
-        private sprite:Sprite
-        offsetTable: Buffer;
-        
-        private bandWidth:number
-        private width:number
-        private height:number
-
-        setBandWidth(bandWidth:number) {
-            this.bandWidth = bandWidth
-            this.prepareOffset()
-        }
-
-        getBandWidth():number {
-            return this.bandWidth 
-        }
-
-        prepareOffset() {
-            const halfh = this.centerRadius + this.rings * this.bandWidth;
-            this.offsetTable = pins.createBuffer((this.rings + 1) * halfh);
-
-            // Approach is roughly based on https://hackernoon.com/pico-8-lighting-part-1-thin-dark-line-8ea15d21fed7
-            let x: number;
-            let band: number;
-            let y2: number;
-            for (let y = 0; y < halfh; y++) {
-                y2 = Math.pow(y, 2);
-                // Store the offsets where the bands switch light levels for each row. We only need to
-                // do one quadrant which we can mirror in x/y
-                for (band = 0; band < this.rings; band++) {
-                    x = Math.sqrt(Math.pow(this.centerRadius + this.bandWidth * (band + 1), 2) - y2) | 0;
-                    this.offsetTable[y * this.rings + band] = x;
-                }
-            }
-
-            this.width = halfh;
-            this.height = halfh;
-        }
-
-        constructor(sprite:Sprite, bandWidth:number, public rings: number, public centerRadius: number ){
-            this.sprite = sprite
-            this.bandWidth = bandWidth
-
-            this.prepareOffset()
-        }
-
-        changeRowLightLevel(lightMap:Image, x:number, y:number, width:number, lightLevel:number) {
-            for(let x0 = x ; x0 < width + x; x0++) {
-                let currentLightLevel = lightMap.getPixel(x0, y)
-                lightMap.setPixel(x0, y, Math.min(lightLevel, currentLightLevel))
-            }
-        }
-        
-
-        apply(lightMap:Image) {
-            const camera = game.currentScene().camera;
-            const halfh = this.width;
-            const cx = this.sprite.x - camera.drawOffsetX;
-            const cy = this.sprite.y - camera.drawOffsetY;
-
-            let prev: number;
-            let offset: number;
-            let band: number;
-
-            // Go over each row and light the colors
-            for (let y = 0; y < halfh; y++) {
-                band = this.rings;
-                prev = 0;
-                offset = this.offsetTable[y * this.rings + band - 1]
-
-                // Darken each concentric circle by remapping the colors
-                while (band > 0) {
-                    offset = this.offsetTable[y * this.rings + band - 1]
-                    if (offset) {
-                        offset += (Math.idiv(Math.randomRange(0, 11), 5))
-                    }
-
-                    // We reflect the circle-quadrant horizontally and vertically
-                    this.changeRowLightLevel(lightMap, cx + offset, cy + y + 1, prev - offset,band)
-                    this.changeRowLightLevel(lightMap, cx - prev, cy + y + 1, prev - offset,band) 
-                    this.changeRowLightLevel(lightMap, cx + offset, cy - y, prev - offset,band)
-                    this.changeRowLightLevel(lightMap, cx - prev, cy - y, prev - offset,band)
-
-                    if (band == 1) {
-                        this.changeRowLightLevel(lightMap, cx, cy + y + 1, prev,0)
-                        this.changeRowLightLevel(lightMap, cx-prev, cy + y + 1, prev,0)  
-                        this.changeRowLightLevel(lightMap, cx, cy - y, prev,0)
-                        this.changeRowLightLevel(lightMap, cx-prev, cy - y, prev,0)   
-                    }
-
-                    prev = offset;
-                    band--;
-                }
-            }
-        }
-    }
-
     export class MultiLightScreenEffect implements effects.BackgroundEffect {
 
-        private lightSourceMap : {[id:string]:MultiLightSource;} = {}
+        private lightSourceMap : {[id:string]:lightsource.LightSource;} = {}
         private bandPalettes :Buffer[] = []
         private _init:boolean = false
         private running = false;
@@ -186,10 +89,24 @@ namespace multilights {
             this._init = true
         }
 
+        addFlashLightSource (sprite:Sprite, bandWidth:number, direction:number, lightRange:number, angleRange:number) {
+            let newLightSource = this.lightSourceMap[sprite.id]
+            if (!newLightSource) {
+                newLightSource = new lightsource.FlashlightLightSource(sprite, bandWidth, direction, lightRange, angleRange)    
+                this.lightSourceMap[sprite.id] = newLightSource
+            } else {
+                
+            }
+
+            sprite.onDestroyed(function() {
+                removeLightSource(sprite)      
+            })
+        }
+
         addLightSource(sprite:Sprite, bandWidth:number) {
             let newLightSource = this.lightSourceMap[sprite.id]
             if (!newLightSource) {
-                newLightSource = new MultiLightSource(sprite, bandWidth, 4, 1)    
+                newLightSource = new lightsource.CircleLightSource(sprite, bandWidth, 4, 1)    
                 this.lightSourceMap[sprite.id] = newLightSource
             }
 
@@ -228,6 +145,10 @@ namespace multilights {
     //%bandWidth.defl=4
     export function addLightSource(sprite:Sprite,bandWidth:number=4) {
         MultiLightScreenEffect.getInstance().addLightSource(sprite, bandWidth)
+    }
+
+    export function addFlashLightSource(sprite:Sprite, bandWidth:number, direction:number, lightRange:number, angleRange:number) {
+        MultiLightScreenEffect.getInstance().addFlashLightSource(sprite, bandWidth, direction, lightRange, angleRange)
     }
     
 }
