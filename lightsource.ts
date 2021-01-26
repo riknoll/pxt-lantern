@@ -17,10 +17,33 @@ namespace lightsource {
         return degree / 180 * Math.PI
     }
 
+    function isValid(x:number, y: number, angle:number) :boolean{
+        angle = (angle+360) % 360
+        if (x > 0) {
+            if (y < 0) {
+                return 270 <= angle && angle < 360 
+            } else {
+                return 0 < angle && angle <= 90
+            }
+        } else if (x < 0) {
+            if (y < 0) {
+                return 180 <= angle && angle < 270
+            } else {
+                return 90 < angle && angle <= 180
+            }
+        } else {
+            if ( y > 0) {
+                return angle == 90
+            } else {
+                return angle == 270
+            }
+        }
+    }
+
     export class FlashlightLightSource implements LightSource {
         private sprite:Sprite;
         private bandWidth:number;
-        private direction:number;
+        private _direction:number;
         offsetTable: Buffer;
 
         private width:number;
@@ -30,7 +53,16 @@ namespace lightsource {
             this.bandWidth = bandWidth
         }
 
-         prepareOffset() {
+        set direction(direction:number) {
+            this._direction = direction % 360
+        }
+
+        get direction() {
+            return this._direction
+        }
+
+
+        prepareOffset() {
             const halfh = this.lightRange;
             this.offsetTable = pins.createBuffer(halfh);
 
@@ -54,7 +86,7 @@ namespace lightsource {
          constructor(sprite:Sprite, bandWidth:number,  direction:number, private lightRange:number, private angleRange:number){
             this.sprite = sprite
             this.bandWidth = bandWidth
-            this.direction = direction
+            this._direction = direction
 
             this.prepareOffset()
         }                        
@@ -73,6 +105,8 @@ namespace lightsource {
             let x2 :number;
             let x3 :number;
             let offset: number;
+            let angleRangeLower = (this._direction - this.angleRange) % 360
+            let angleRangeUpper = (this._direction + this.angleRange) % 360
 
 
             // Go over each row and light the colors
@@ -80,42 +114,65 @@ namespace lightsource {
                 offset = this.offsetTable[Math.abs(y)]
                 x0 = -offset
 
-                if (y == -2) {
-                    console.log(1111)
-                }
-                // angle caculation
-                if (y > Math.tan(degreeToRadius(this.direction - this.angleRange)) * x0) {
-                    x0 =  y / Math.tan(degreeToRadius(this.direction - this.angleRange))              
-                } else if (y < Math.tan(degreeToRadius(this.direction + this.angleRange)) * x0) {
-                    x0 =  y / Math.tan(degreeToRadius(this.direction + this.angleRange))  
-                }
-                if (Math.atan2(y, offset) < degreeToRadius(this.direction - this.angleRange)) {
-                    offset =  y / Math.tan(degreeToRadius(this.direction - this.angleRange))              
-                } else if (Math.atan2(y, offset) > degreeToRadius(this.direction + this.angleRange)) {
-                    offset =  y / Math.tan(degreeToRadius(this.direction + this.angleRange))
-                }
+                if (y == 0) {
+                    if ( 0 > angleRangeLower && 0 < angleRangeUpper) {
+                        x0 = 0
+                    } else if (180 > angleRangeLower && 180 < angleRangeUpper) {
+                        offset = 0
+                    } else {
+                        x0 = 0
+                        offset = 0
+                    }
+                } else {
+                    x1 = y / Math.tan(degreeToRadius(angleRangeLower))
+                    x2 = y / Math.tan(degreeToRadius(angleRangeUpper))
 
-                // Darken each concentric circle by remapping the colors
+                    if (y == -2) {
+                        console.log(x1 + " ," + x2)
+                    }
+
+                    if (angleRangeLower == 90 || angleRangeLower == 270) {
+                        x1 = 0
+                    }
+                    if (angleRangeUpper == 90 || angleRangeUpper == 270) {
+                        x2 = 0
+                    }
+
+                    if (isValid(x1, y, angleRangeLower)) {
+                        if (isValid(x2, y, angleRangeUpper)) {
+                            if (x1 > x2) {
+                                [x1, x2] = [x2, x1]
+                            }   
+                            x0 = Math.max(x0, x1)
+                            offset = Math.min(offset, x2)
+                        } else {
+                            if (y < 0) {
+                                x0 = x1
+                            } else {
+                                offset = x1
+                            }
+                        } 
+                    } else {
+                        if (isValid(x2,y, angleRangeUpper)) {
+                            if (y < 0) {
+                                offset = x2
+                            } else {
+                                x0 = x2
+                            }
+                        } else {
+                            x0 = 0
+                            offset = 0
+                        }
+                    }
+                }    
+
+
                 if (offset - x0 > 0) {
                     offset += (Math.idiv(Math.randomRange(0, 11), 5))
                     x0 -= (Math.idiv(Math.randomRange(0, 11), 5))
+                    changeRowLightLevel(lightMap, cx + x0, cy + y, Math.abs(x0 - offset), 0)    
                 }
-
-                // We reflect the circle-quadrant horizontally and vertically
-                // no diffraction == no offset
-                // changeRowLightLevel(lightMap, cx + offset, cy + y + 1, prev - offset,1)
-                // changeRowLightLevel(lightMap, cx - prev, cy + y + 1, prev - offset,1) 
-                // changeRowLightLevel(lightMap, cx + offset, cy - y, prev - offset,1)
-                // changeRowLightLevel(lightMap, cx - prev, cy - y, prev - offset,1)
-
-                if (y == -2) {
-                    console.log("-2-2-2-2-2 degreeToRadius(this.direction + this.angleRange)=" + degreeToRadius(this.direction + this.angleRange) + "Math.atan2(y, x0)=" + Math.atan2(y, x0) + ",x0=" + x0 + ", offset=" + offset)
-                }
-                if (y == 2) {
-                    console.log("2222222222 degreeToRadius(this.direction + this.angleRange)=" + degreeToRadius(this.direction + this.angleRange) + "Math.atan2(y, x0)=" + Math.atan2(y, x0) + ",x0=" + x0 + ", offset=" + offset)
-                }
-
-                changeRowLightLevel(lightMap, cx + x0, cy + y, Math.abs(x0 - offset),0)
+                
                 // changeRowLightLevel(lightMap, cx + x1, cy + y, Math.abs(offset - x1),0)
                 // changeRowLightLevel(lightMap, cx-offset, cy + y + 1, Math.abs(offset - x0),0)
                 

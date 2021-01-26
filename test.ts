@@ -1,3 +1,5 @@
+tiles.setTilemap(tilemap`级别1`)
+
 const s = sprites.create(sprites.castle.princess2Front, SpriteKind.Player)
 controller.moveSprite(s)
 s.z = 10;
@@ -31,94 +33,103 @@ scene.setBackgroundColor(Math.randomRange(2, 14))
 //         }
 //     }
 // }
-multilights.addFlashLightSource(s, 10, -200, 80, 30)
+let flashlightLightSource = multilights.addFlashLightSource(s, 10, 0, 80, 20)
+multilights.addLightSource(s, 5)
 multilights.toggleLighting(true)
 
 let lightEffectOn = true
 let direction = 30
-controller.B.onEvent(ControllerButtonEvent.Pressed, function() {
-    // multilights.addFlashLightSource(s, 10, direction, 80, 20)
-    // direction +=90
-    
-    lightEffectOn = !lightEffectOn
-    multilights.toggleLighting(lightEffectOn)
-})
 controller.A.onEvent(ControllerButtonEvent.Pressed, function() {
-    let projectileSprite = sprites.createProjectileFromSprite(img`
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . 5 5 . . . . . . . .
-        . . . . . 5 2 2 5 . . . . . . .
-        . . . . 5 2 1 1 2 5 . . . . . .
-        . . . . 5 2 1 1 2 5 . . . . . .
-        . . . . . 5 2 2 5 . . . . . . .
-        . . . . . . 5 5 . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-    `, s, 50, 0)
-    multilights.addLightSource(projectileSprite, 4)
-    projectileSprite = sprites.createProjectileFromSprite(img`
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . 5 5 . . . . . . . .
-        . . . . . 5 2 2 5 . . . . . . .
-        . . . . 5 2 1 1 2 5 . . . . . .
-        . . . . 5 2 1 1 2 5 . . . . . .
-        . . . . . 5 2 2 5 . . . . . . .
-        . . . . . . 5 5 . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-    `, s, -50, 0)
-    multilights.addLightSource(projectileSprite, 4)
-    projectileSprite = sprites.createProjectileFromSprite(img`
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . 5 5 . . . . . . . .
-        . . . . . 5 2 2 5 . . . . . . .
-        . . . . 5 2 1 1 2 5 . . . . . .
-        . . . . 5 2 1 1 2 5 . . . . . .
-        . . . . . 5 2 2 5 . . . . . . .
-        . . . . . . 5 5 . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-    `, s, 0, 50)
-    multilights.addLightSource(projectileSprite, 4)
-    projectileSprite = sprites.createProjectileFromSprite(img`
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . 5 5 . . . . . . . .
-        . . . . . 5 2 2 5 . . . . . . .
-        . . . . 5 2 1 1 2 5 . . . . . .
-        . . . . 5 2 1 1 2 5 . . . . . .
-        . . . . . 5 2 2 5 . . . . . . .
-        . . . . . . 5 5 . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-    `, s, 0, -50)
-    multilights.addLightSource(projectileSprite, 4)
-
+    // let flashlightSource = multilights.addFlashLightSource(s, 10, direction, 80, 20)
+    
+    flashlightLightSource.direction = flashlightLightSource.direction - 10
+    
+    // lightEffectOn = !lightEffectOn
+    // multilights.toggleLighting(lightEffectOn)
 })
+controller.B.onEvent(ControllerButtonEvent.Pressed, function() {
+    // let flashlightSource = multilights.addFlashLightSource(s, 10, direction, 80, 20)
+    
+    flashlightLightSource.direction = flashlightLightSource.direction + 10
+    
+    // lightEffectOn = !lightEffectOn
+    // multilights.toggleLighting(lightEffectOn)
+})
+// controller.A.onEvent(ControllerButtonEvent.Pressed, function() {
+//     let projectileSprite = sprites.createProjectileFromSprite(img`
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . 5 5 . . . . . . . .
+//         . . . . . 5 2 2 5 . . . . . . .
+//         . . . . 5 2 1 1 2 5 . . . . . .
+//         . . . . 5 2 1 1 2 5 . . . . . .
+//         . . . . . 5 2 2 5 . . . . . . .
+//         . . . . . . 5 5 . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//     `, s, 50, 0)
+//     multilights.addLightSource(projectileSprite, 4)
+//     projectileSprite = sprites.createProjectileFromSprite(img`
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . 5 5 . . . . . . . .
+//         . . . . . 5 2 2 5 . . . . . . .
+//         . . . . 5 2 1 1 2 5 . . . . . .
+//         . . . . 5 2 1 1 2 5 . . . . . .
+//         . . . . . 5 2 2 5 . . . . . . .
+//         . . . . . . 5 5 . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//     `, s, -50, 0)
+//     multilights.addLightSource(projectileSprite, 4)
+//     projectileSprite = sprites.createProjectileFromSprite(img`
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . 5 5 . . . . . . . .
+//         . . . . . 5 2 2 5 . . . . . . .
+//         . . . . 5 2 1 1 2 5 . . . . . .
+//         . . . . 5 2 1 1 2 5 . . . . . .
+//         . . . . . 5 2 2 5 . . . . . . .
+//         . . . . . . 5 5 . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//     `, s, 0, 50)
+//     multilights.addLightSource(projectileSprite, 4)
+//     projectileSprite = sprites.createProjectileFromSprite(img`
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . 5 5 . . . . . . . .
+//         . . . . . 5 2 2 5 . . . . . . .
+//         . . . . 5 2 1 1 2 5 . . . . . .
+//         . . . . 5 2 1 1 2 5 . . . . . .
+//         . . . . . 5 2 2 5 . . . . . . .
+//         . . . . . . 5 5 . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//         . . . . . . . . . . . . . . . .
+//     `, s, 0, -50)
+//     multilights.addLightSource(projectileSprite, 4)
+// })

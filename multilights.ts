@@ -7,6 +7,7 @@ namespace multilights {
     export class MultiLightScreenEffect implements effects.BackgroundEffect {
 
         private lightSourceMap : {[id:string]:lightsource.LightSource;} = {}
+        private flashlightSourceMap :{[id:string]:lightsource.FlashlightLightSource;} = {}
         private bandPalettes :Buffer[] = []
         private _init:boolean = false
         private running = false;
@@ -81,6 +82,11 @@ namespace multilights {
                     let lightsource = this.lightSourceMap[key]
                     lightsource.apply(lightMap)
                 }                
+                for (const key of Object.keys(this.flashlightSourceMap)) {
+                    let lightsource = this.flashlightSourceMap[key]
+                    lightsource.apply(lightMap)
+                }                
+
                 // 2. apply light map to screen
                 // screen.drawTransparentImage(lightMap, 0, 0)
                 this.applyLightMapToScreen(lightMap)
@@ -89,18 +95,17 @@ namespace multilights {
             this._init = true
         }
 
-        addFlashLightSource (sprite:Sprite, bandWidth:number, direction:number, lightRange:number, angleRange:number) {
-            let newLightSource = this.lightSourceMap[sprite.id]
+        addFlashLightSource (sprite:Sprite, bandWidth:number, direction:number, lightRange:number, angleRange:number) :lightsource.FlashlightLightSource{
+            let newLightSource = this.flashlightSourceMap[sprite.id]
             if (!newLightSource) {
                 newLightSource = new lightsource.FlashlightLightSource(sprite, bandWidth, direction, lightRange, angleRange)    
-                this.lightSourceMap[sprite.id] = newLightSource
-            } else {
-                
+                this.flashlightSourceMap[sprite.id] = newLightSource
+                sprite.onDestroyed(function() {
+                    removeLightSource(sprite)      
+                })
             }
 
-            sprite.onDestroyed(function() {
-                removeLightSource(sprite)      
-            })
+            return newLightSource as lightsource.FlashlightLightSource
         }
 
         addLightSource(sprite:Sprite, bandWidth:number) {
@@ -147,8 +152,10 @@ namespace multilights {
         MultiLightScreenEffect.getInstance().addLightSource(sprite, bandWidth)
     }
 
-    export function addFlashLightSource(sprite:Sprite, bandWidth:number, direction:number, lightRange:number, angleRange:number) {
-        MultiLightScreenEffect.getInstance().addFlashLightSource(sprite, bandWidth, direction, lightRange, angleRange)
+    export function addFlashLightSource(sprite:Sprite, bandWidth:number, direction:number, lightRange:number, angleRange:number) : lightsource.FlashlightLightSource{
+        return MultiLightScreenEffect.getInstance().addFlashLightSource(sprite, bandWidth, direction, lightRange, angleRange)
     }
+
+    
     
 }
