@@ -1,5 +1,5 @@
 
-//% icon="\uf185" color="#8f1fff"
+//% icon="\uf185" color="#8f1fff" advanced="true"
 namespace lantern {
     let bandPalettes: Buffer[];
 
@@ -52,8 +52,8 @@ namespace lantern {
             // First, black out the completely dark areas of the screen
             screen.fillRect(0, 0, screen.width, cy - halfh + 1, 15)
             screen.fillRect(0, cy - halfh + 1, cx - halfh, halfh << 1, 15)
-            screen.fillRect(cx + halfh, cy - halfh + 1, screen.width - cx - halfh, halfh << 1, 15)
-            screen.fillRect(0, cy + halfh, screen.width, screen.height - (cy + halfh), 15)
+            screen.fillRect(cx + halfh, cy - halfh + 1, screen.width - cx - halfh + 1, halfh << 1, 15)
+            screen.fillRect(0, cy + halfh, screen.width, screen.height - (cy + halfh) + 1, 15)
 
             // Go over each row and darken the colors
             for (let y = 0; y < halfh; y++) {
@@ -178,6 +178,62 @@ namespace lantern {
         }
     }
 
+    export class MultiLightSourceEffect implements effects.BackgroundEffect {
+        protected static instance:MultiLightSourceEffect  
+        protected sources: LightSource[];
+        protected init: boolean;
+        protected running: boolean;
+        protected breathing: boolean;
+
+        startScreenEffect() :void{
+            this.running = true;
+
+            if (this.init) return;
+            this.init = true;   
+
+       
+            scene.createRenderable(91, () => {
+                if (!this.running) return;
+                // render according to all light sources 
+                // black out all dark area
+                
+
+       
+            })
+
+        }
+
+        addLightSource(sprite:Sprite, width:number = 13) {
+            for (let source of this.sources) {
+                // if (source.anchor)
+            }
+        }
+
+        stopScreenEffect() {
+            this.running = false
+        }
+
+        private constructor() {
+            bandPalettes = [];
+            for (let band = 0; band < 6; band++) {
+                const buffer = pins.createBuffer(16);
+                for (let i = 0; i < 16; i++) {
+                    buffer[i] = palette_ramps.getPixel(i, band + 1);
+                }
+                bandPalettes.push(buffer);
+            }
+
+            this.running = false;
+            this.breathing = true;
+        }
+
+        public static getInstance() {
+            if (!MultiLightSourceEffect.instance) MultiLightSourceEffect.instance = new MultiLightSourceEffect();
+             return MultiLightSourceEffect.instance;
+        }
+
+    }
+
     //% block
     export function startLanternEffect(anchor: Sprite) {
         if (!anchor) {
@@ -200,8 +256,27 @@ namespace lantern {
         LanternEffect.getInstance().setBandWidth(width);
     }
 
+
     //% block
     export function setBreathingEnabled(enabled: boolean) {
         LanternEffect.getInstance().setBreathingEnabled(enabled);
     }
+
+
+    // multi light source start 
+    enum LightSourceMode {
+        SINGLE, MULTIPLE
+    }
+
+
+    export function setLightBandWidthOf(sprite:Sprite, width:number) {
+
+    }
+
+    let lightSourceMode = LightSourceMode.SINGLE
+  
+    export function setLightSourceMode(mode:LightSourceMode) {
+        lightSourceMode = mode
+    }
+
 }

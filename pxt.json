@@ -1,6 +1,6 @@
 {
     "name": "pxt-lantern",
-    "version": "0.1.1",
+    "version": "0.2.0",
     "description": "",
     "dependencies": {
         "device": "*"
@@ -8,12 +8,20 @@
     "files": [
         "README.md",
         "main.ts",
-        "lantern.ts"
+        "lantern.ts",
+        "multilights.ts",
+        "lightsource.ts",
+        "tilemap.g.jres",
+        "tilemap.g.ts"
     ],
     "testFiles": [
         "test.ts"
     ],
     "public": true,
+    "targetVersions": {
+        "target": "1.3.42",
+        "targetId": "arcade"
+    },
     "supportedTargets": [
         "arcade"
     ],

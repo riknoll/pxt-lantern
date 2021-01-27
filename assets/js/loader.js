@@ -1,3 +1,9 @@
+var channelHandlers = {}
+
+function addSimMessageHandler(channel, handler) {
+    channelHandlers[channel] = handler;
+}
+
 function makeCodeRun(options) {
     var code = "";
     var isReady = false;
@@ -83,14 +89,38 @@ function makeCodeRun(options) {
                     startSim();
                     break;
                 case "setstate":
-                    simState[d.stateKey] = d.stateValue
-                    simStateChanged = true
+                    if (d.stateValue === null)
+                        delete simState[d.stateKey];
+                    else
+                        simState[d.stateKey] = d.stateValue;
+                    simStateChanged = true;
                     break;
             }
-        }
+        } else if (d.type === "messagepacket" && d.channel) {
+            const handler = channelHandlers[d.channel]
+            if (handler) {
+                try {
+                    const buf = d.data;
+                    const str = uint8ArrayToString(buf);
+                    const data = JSON.parse(str)
+                    handler(data);
+                } catch (e) {
+                    console.log(`invalid simmessage`)
+                    console.log(e)
+                }
+            }
+        }            
     }, false);
 
     // helpers
+    function uint8ArrayToString(input) {
+        let len = input.length;
+        let res = ""
+        for (let i = 0; i < len; ++i)
+            res += String.fromCharCode(input[i]);
+        return res;
+    }            
+
     function setState(st) {
         var r = document.getElementById("root");
         if (r)
