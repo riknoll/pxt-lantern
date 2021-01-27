@@ -45,6 +45,7 @@ namespace lightsource {
         private bandWidth:number;
         private _direction:number;
         offsetTable: Buffer;
+        private _angleRange:number;
 
         private width:number;
         private height:number;
@@ -59,6 +60,14 @@ namespace lightsource {
 
         get direction() {
             return this._direction
+        }
+
+        set angleRange(angleRange:number) {
+            this._angleRange = angleRange / 2
+        }
+
+        get angleRange() {
+            return this._angleRange
         }
 
 
@@ -83,10 +92,11 @@ namespace lightsource {
             this.height = halfh;
         }
 
-         constructor(sprite:Sprite, bandWidth:number,  direction:number, private lightRange:number, private angleRange:number){
+         constructor(sprite:Sprite, bandWidth:number,  direction:number, private lightRange:number, angleRange:number){
             this.sprite = sprite
             this.bandWidth = bandWidth
             this._direction = direction
+            this._angleRange = angleRange / 2
 
             this.prepareOffset()
         }                        
@@ -126,10 +136,6 @@ namespace lightsource {
                 } else {
                     x1 = y / Math.tan(degreeToRadius(angleRangeLower))
                     x2 = y / Math.tan(degreeToRadius(angleRangeUpper))
-
-                    if (y == -2) {
-                        console.log(x1 + " ," + x2)
-                    }
 
                     if (angleRangeLower == 90 || angleRangeLower == 270) {
                         x1 = 0

@@ -4,25 +4,6 @@
         "mimeType": "image/x-mkcd-f4",
         "tilemapTile": true
     },
-    "级别1": {
-        "id": "级别1",
-        "mimeType": "application/mkcd-tilemap",
-        "data": "MTAxMDAwMTAwMDAxMDIwMjAyMDIwMjAyMDIwMjAyMDIwMjAyMDIwMjAzMDQwOTA5MDkwOTA5MDkwOTA5MDkwYTA5MDkwOTA5MDgwNDA5MGEwOTA5MDkwOTA5MDkwOTBhMDkwOTA5MDkwODA0MDkwYTA5MDkwOTA5MDkwOTA5MDkwOTA5MDkwOTA4MDQwOTBhMDkwYTBhMGEwYTBhMGEwYTBhMGEwYTA5MDgwNDA5MGEwOTA5MDkwOTA5MDkwOTA5MDkwOTA5MDkwODA0MDkwYTA5MDkwOTA5MDkwOTA5MDkwOTA5MDkwOTA4MDQwOTBhMDkwOTA5MDkwYTA5MDkwOTBhMDkwOTA5MDgwNDA5MGEwOTA5MDkwOTBhMDkwOTA5MGEwOTA5MDkwODA0MDkwYTA5MDkwYTA5MGEwOTA5MDkwYTA5MDkwOTA4MDQwOTBhMDkwOTBhMDkwYTA5MDkwOTBhMDkwOTA5MDgwNDA5MGEwOTA5MGEwOTBhMDkwOTA5MDkwOTA5MDkwODA0MDkwOTA5MDkwYTA5MDkwOTA5MDkwOTA5MDkwOTA4MDQwOTA5MDkwOTBhMDkwOTBhMGEwYTBhMGEwOTA5MDgwNDA5MDkwOTA5MDkwOTA5MDkwOTA5MDkwOTA5MDkwODA1MDYwNjA2MDYwNjA2MDYwNjA2MDYwNjA2MDYwNjA3MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMA==",
-        "tileset": [
-            "myTiles.transparency16",
-            "sprites.dungeon.greenOuterNorthWest",
-            "sprites.dungeon.greenOuterNorth0",
-            "sprites.dungeon.greenOuterNorthEast",
-            "sprites.dungeon.greenOuterWest0",
-            "sprites.dungeon.greenOuterSouthEast",
-            "sprites.dungeon.greenOuterSouth1",
-            "sprites.dungeon.greenOuterSouthWest",
-            "sprites.dungeon.greenOuterEast0",
-            "sprites.dungeon.floorLight2",
-            "sprites.dungeon.stairLadder"
-        ],
-        "displayName": "级别1"
-    },
     "*": {
         "mimeType": "image/x-mkcd-f4",
         "dataEncoding": "base64",

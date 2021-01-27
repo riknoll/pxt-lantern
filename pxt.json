@@ -10,7 +10,6 @@
         "main.ts",
         "lantern.ts",
         "multilights.ts",
-        "flashlight.ts",
         "lightsource.ts",
         "tilemap.g.jres",
         "tilemap.g.ts"

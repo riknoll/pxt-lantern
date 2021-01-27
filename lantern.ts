@@ -1,5 +1,5 @@
 
-//% icon="\uf185" color="#8f1fff"
+//% icon="\uf185" color="#8f1fff" advanced="true"
 namespace lantern {
     let bandPalettes: Buffer[];
 

@@ -1,5 +1,3 @@
-tiles.setTilemap(tilemap`级别1`)
-
 const s = sprites.create(sprites.castle.princess2Front, SpriteKind.Player)
 controller.moveSprite(s)
 s.z = 10;
@@ -33,7 +31,7 @@ scene.setBackgroundColor(Math.randomRange(2, 14))
 //         }
 //     }
 // }
-let flashlightLightSource = multilights.addFlashLightSource(s, 10, 0, 80, 20)
+let flashlightLightSource = multilights.addFlashLightSource(s, 0, 80, 60,10)
 multilights.addLightSource(s, 5)
 multilights.toggleLighting(true)
 

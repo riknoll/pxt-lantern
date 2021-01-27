@@ -152,7 +152,12 @@ namespace multilights {
         MultiLightScreenEffect.getInstance().addLightSource(sprite, bandWidth)
     }
 
-    export function addFlashLightSource(sprite:Sprite, bandWidth:number, direction:number, lightRange:number, angleRange:number) : lightsource.FlashlightLightSource{
+    //%block
+    //%blockid=multiplightAddFlashlightSource block="add flashlight to %sprite=variables_get(mySprite) direction %direction lightRange %lightRange angleRangle %angleRange"
+    //%direction.defl=0
+    //%lightRange.defl=32
+    //%angleRange.defl=30
+    export function addFlashLightSource(sprite:Sprite, direction:number, lightRange:number, angleRange:number,  bandWidth:number=5) : lightsource.FlashlightLightSource{
         return MultiLightScreenEffect.getInstance().addFlashLightSource(sprite, bandWidth, direction, lightRange, angleRange)
     }
 
