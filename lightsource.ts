@@ -40,12 +40,16 @@ namespace lightsource {
         }
     }
 
+
+    //% blockNamespace="multilights"
+    //% blockGap=8
     export class FlashlightLightSource implements LightSource {
         private sprite:Sprite;
         private bandWidth:number;
         private _direction:number;
         offsetTable: Buffer;
         private _angleRange:number;
+        private _lightRange:number;
 
         private width:number;
         private height:number;
@@ -54,18 +58,31 @@ namespace lightsource {
             this.bandWidth = bandWidth
         }
 
+        set lightRange(lightRange:number) {
+            this._lightRange = lightRange % 360
+        }
+
+        //% group="Flashlight" blockSetVariable="flashlight"
+        //% blockCombine block="lightRange" callInDebugger
+        get lightRange() {
+            return this._lightRange
+        }
+
         set direction(direction:number) {
             this._direction = direction % 360
         }
 
+        //% group="Flashlight" blockSetVariable="flashlight"
+        //% blockCombine block="direction" callInDebugger
         get direction() {
             return this._direction
         }
-
         set angleRange(angleRange:number) {
             this._angleRange = angleRange / 2
         }
 
+        //% group="Flashlight" blockSetVariable="flashlight"
+        //% blockCombine block="angleRange" callInDebugger
         get angleRange() {
             return this._angleRange
         }
@@ -92,11 +109,12 @@ namespace lightsource {
             this.height = halfh;
         }
 
-         constructor(sprite:Sprite, bandWidth:number,  direction:number, private lightRange:number, angleRange:number){
+         constructor(sprite:Sprite, bandWidth:number,  direction:number, lightRange:number, angleRange:number){
             this.sprite = sprite
             this.bandWidth = bandWidth
-            this._direction = direction
+            this._direction = direction % 360
             this._angleRange = angleRange / 2
+            this._lightRange = lightRange
 
             this.prepareOffset()
         }                        

@@ -31,7 +31,7 @@ scene.setBackgroundColor(Math.randomRange(2, 14))
 //         }
 //     }
 // }
-let flashlightLightSource = multilights.addFlashLightSource(s, 0, 80, 60,10)
+multilights.addFlashLightSource(s, 0, 80, 60,10)
 multilights.addLightSource(s, 5)
 multilights.toggleLighting(true)
 
@@ -40,7 +40,8 @@ let direction = 30
 controller.A.onEvent(ControllerButtonEvent.Pressed, function() {
     // let flashlightSource = multilights.addFlashLightSource(s, 10, direction, 80, 20)
     
-    flashlightLightSource.direction = flashlightLightSource.direction - 10
+    multilights.flashlightSourceAttachedTo(s).direction -= 10
+
     
     // lightEffectOn = !lightEffectOn
     // multilights.toggleLighting(lightEffectOn)
@@ -48,7 +49,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function() {
 controller.B.onEvent(ControllerButtonEvent.Pressed, function() {
     // let flashlightSource = multilights.addFlashLightSource(s, 10, direction, 80, 20)
     
-    flashlightLightSource.direction = flashlightLightSource.direction + 10
+    multilights.flashlightSourceAttachedTo(s).direction += 10
     
     // lightEffectOn = !lightEffectOn
     // multilights.toggleLighting(lightEffectOn)

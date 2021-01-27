@@ -63,6 +63,10 @@ namespace multilights {
             delete this.lightSourceMap[sprite.id]
         }
 
+        getFlashlight(sprite:Sprite) {
+            return this.flashlightSourceMap[sprite.id]
+        }
+
         startScreenEffect() {
             this.running = true            
             if(this._init) {
@@ -132,6 +136,7 @@ namespace multilights {
     }
 
     //%block
+    //%group="Circlelight"
     //%blockid=multiplightBandWidthOfSprite block="set %sprite=variables_get(mySprite) light band width to %bandWidth"
     //%bandWidth.defl=4
     export function bandWidthOf(sprite:Sprite, bandWidth:number) {
@@ -139,6 +144,7 @@ namespace multilights {
     }
 
     //%block
+    //%group="Circlelight"
     //%blockid=multiplightRemoveLishtSource block="remove light source of %sprite=variables_get(mySprite) "
        export function removeLightSource(sprite:Sprite) {
         MultiLightScreenEffect.getInstance().removeLightSource(sprite)
@@ -146,6 +152,7 @@ namespace multilights {
 
 
     //%block
+    //%group="Circlelight"
     //%blockid=multiplightAddLishtSource block="add light source of %sprite=variables_get(mySprite) || with band width of %bandWidth "
     //%bandWidth.defl=4
     export function addLightSource(sprite:Sprite,bandWidth:number=4) {
@@ -153,14 +160,21 @@ namespace multilights {
     }
 
     //%block
-    //%blockid=multiplightAddFlashlightSource block="add flashlight to %sprite=variables_get(mySprite) direction %direction lightRange %lightRange angleRangle %angleRange"
+    //%group="Flashlight"
+    //%blockid=multiplightAddFlashlightSource block="attach flashlight to %sprite=variables_get(mySprite) direction %direction lightRange %lightRange angleRangle %angleRange"
     //%direction.defl=0
     //%lightRange.defl=32
     //%angleRange.defl=30
-    export function addFlashLightSource(sprite:Sprite, direction:number, lightRange:number, angleRange:number,  bandWidth:number=5) : lightsource.FlashlightLightSource{
-        return MultiLightScreenEffect.getInstance().addFlashLightSource(sprite, bandWidth, direction, lightRange, angleRange)
+    export function addFlashLightSource(sprite:Sprite, direction:number, lightRange:number, angleRange:number, bandWidth:number=5){
+        MultiLightScreenEffect.getInstance().addFlashLightSource(sprite, bandWidth, direction, lightRange, angleRange)
     }
 
+    //%block
+    //%group="Flashlight"
+    //%blockid=multilightGetFlashlightSourceAttacedTo block="flashlight attached to %sprite=variables_get(mySprite)"
+    export function flashlightSourceAttachedTo(sprite:Sprite) : lightsource.FlashlightLightSource{
+        return MultiLightScreenEffect.getInstance().getFlashlight(sprite)
+    }
     
     
 }
