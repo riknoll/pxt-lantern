@@ -19,7 +19,7 @@ namespace lantern {
 
         constructor(public rings: number, public bandWidth: number, public centerRadius: number) {
             const halfh = centerRadius + rings * bandWidth;
-            this.offsetTable = pins.createBuffer((rings + 1) * halfh);
+            this.offsetTable = control.createBuffer((rings + 1) * halfh);
 
             // Approach is roughly based on https://hackernoon.com/pico-8-lighting-part-1-thin-dark-line-8ea15d21fed7
             let x: number;
@@ -103,7 +103,7 @@ namespace lantern {
         private constructor() {
             bandPalettes = [];
             for (let band = 0; band < 6; band++) {
-                const buffer = pins.createBuffer(16);
+                const buffer = control.createBuffer(16);
                 for (let i = 0; i < 16; i++) {
                     buffer[i] = palette_ramps.getPixel(i, band + 1);
                 }
