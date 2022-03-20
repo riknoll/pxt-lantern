@@ -68,7 +68,8 @@ namespace multilights {
         }
 
         startScreenEffect() {
-            this.running = true            
+            this.running = true   
+
             if(this._init) {
                 return
             }
@@ -94,6 +95,10 @@ namespace multilights {
                 // 2. apply light map to screen
                 // screen.drawTransparentImage(lightMap, 0, 0)
                 this.applyLightMapToScreen(lightMap)
+            })
+
+            game.addScenePopHandler((oldScene:scene.Scene) => {
+                this._init = false
             })
 
             this._init = true
